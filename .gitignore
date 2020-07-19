@@ -2,3 +2,4 @@ data/
 amidst/
 venv/
 logs/
+__pychache__/

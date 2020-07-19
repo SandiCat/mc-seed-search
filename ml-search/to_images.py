@@ -3,13 +3,11 @@ import numpy as np
 import os.path as path
 import os
 import json
+import database
+from io import BytesIO
 
-fresh_seeds_dir = path.join("data", "fresh_seeds")
-scores_dir = path.join("data", "scores")
-world_cache_dir = path.join("data", "world_cache")
-image_dir = path.join("data", "images")
-
-color_map = dict(json.load(open("default_biome_profile.json"))["colorMap"])
+color_map_path = path.join("data", "default_biome_profile.json")
+color_map = dict(json.load(open(color_map_path))["colorMap"])
 biome_num = 256
 color_arr = np.zeros((biome_num, 3), dtype=np.uint8)
 for i in range(biome_num):
@@ -19,9 +17,10 @@ for i in range(biome_num):
         color_arr[i, 1] = color["g"]
         color_arr[i, 2] = color["b"]
 
-for filename in os.listdir(world_cache_dir):
-    seed, ext = path.splitext(filename)
-    world = np.load(path.join(world_cache_dir, filename))
-    rgb = color_arr[world]
+for world in database.World.select().where(database.World.image == None):
+    biome_arr = np.load(BytesIO(world.biome_data))
+    rgb = color_arr[biome_arr]
     rgb = rgb.transpose((1, 0, 2))
-    Image.fromarray(rgb).save(path.join(image_dir, seed + ".png"))
+    f = BytesIO()
+    Image.fromarray(rgb).save(f, format="png")
+    database.World.update(image = f.getvalue()).where(database.World.seed == world.seed).execute()

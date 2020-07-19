@@ -1,6 +1,7 @@
 from peewee import *
+import os.path as path
 
-db = SqliteDatabase('people.db')
+db = SqliteDatabase(path.join('data', 'db.sqlite3'))
 
 class World(Model):
     seed = BigIntegerField(primary_key=True)
