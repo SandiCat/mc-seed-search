@@ -17,7 +17,7 @@ for i in range(biome_num):
         color_arr[i, 1] = color["g"]
         color_arr[i, 2] = color["b"]
 
-for world in database.World.select().where(database.World.image == None):
+for world in database.World.select().where(database.World.image.is_null(True)):
     biome_arr = np.load(BytesIO(world.biome_data))
     rgb = color_arr[biome_arr]
     rgb = rgb.transpose((1, 0, 2))
