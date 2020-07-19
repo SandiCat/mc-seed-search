@@ -19,6 +19,7 @@ import numpy as np
 import database
 from itertools import count
 from io import BytesIO
+import hard_filter
 
 width = 1400
 height = 650
@@ -35,10 +36,11 @@ for i in count():
         return np.uint8(int(biome_oracle.getBiomeAt(x, y, True).getId()))
     biome_data = np.fromfunction(np.vectorize(biome_val), (width, height), dtype=np.int64)
 
-    bin_data = None
-    with BytesIO() as tmp_file:
-        np.save(tmp_file, biome_data)
-        bin_data = tmp_file.getvalue()
-    world = database.World.create(seed = seed.getLong(), biome_data=bin_data)
+    if not hard_filter.should_filter(biome_data):
+        bin_data = None
+        with BytesIO() as tmp_file:
+            np.save(tmp_file, biome_data)
+            bin_data = tmp_file.getvalue()
+        world = database.World.create(seed = seed.getLong(), biome_data=bin_data)
 
     print(i, seed.getLong())
