@@ -4,7 +4,7 @@ import jpype
 import jpype.imports
 from jpype.types import *
 
-jpype.startJVM(classpath=[path.join("data", 'amidst-v4-5-beta3.jar')])
+jpype.startJVM(classpath=[path.join("assets", 'amidst-v4-5-beta3.jar')])
 import java.nio.file as file
 mc = jpype.JPackage("amidst")
 #inst_path = file.FileSystems.getDefault().getPath('/', 'home', 'sandi', '.local', 'share', 'multimc', 'instances', '1.16.1', '.minecraft')

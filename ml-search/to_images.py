@@ -6,7 +6,7 @@ import json
 import database
 from io import BytesIO
 
-color_map_path = path.join("data", "default_biome_profile.json")
+color_map_path = path.join("assets", "default_biome_profile.json")
 color_map = dict(json.load(open(color_map_path))["colorMap"])
 biome_num = 256
 color_arr = np.zeros((biome_num, 3), dtype=np.uint8)
